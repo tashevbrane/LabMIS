@@ -1,30 +1,63 @@
 import 'package:flutter/material.dart';
+import './clothes.dart';
+import './clothes_answer.dart';
 
 void main() => runApp(Labs());
 
-class Labs extends StatelessWidget {
+class Labs extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _LabsState();
+  }
+}
+
+class _LabsState extends State<Labs> {
+  void _tapped() {
+    setState(() {
+      _questionIndex += 1;
+    });
+  }
+
+  var _questionIndex = 0;
+
+  var question = [
+    {
+      'question': "Пол",
+      'answer': ['машки', 'женски'],
+    },
+    {
+      'question': "Тип",
+      'answer': ['облека', 'артикал', 'патики'],
+    },
+    {
+      'question': "Бренд",
+      'answer': ['zara', 'nike', 'adidas', 'tommy hilfiger'],
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: "183292",
+        title: "Облека",
         home: Scaffold(
-            backgroundColor: Color.fromARGB(255, 4, 84, 48),
             appBar: AppBar(
               title: Text(
-                '183292',
+                'Облека',
                 style: TextStyle(
                   fontSize: 30,
-                  color: Colors.white,
+                  color: Colors.red,
                 ),
               ),
-              backgroundColor: Color.fromARGB(255, 6, 146, 125),
+              backgroundColor: Colors.green,
             ),
             body: Column(
               children: [
-                Text(
-                  'Lab 1 - Бранко Ташев',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                )
+                ClothesQuestion(
+                    question[_questionIndex]['question'].toString()),
+                ...(question[_questionIndex]['answer'] as List<String>)
+                    .map((answer) {
+                  return ClothesAnswer(_tapped, answer);
+                }),
               ],
             )));
   }
