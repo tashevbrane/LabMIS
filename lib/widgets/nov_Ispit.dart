@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:nanoid/nanoid.dart';
 
-import '../model/list_item.dart';
+import '../model/ispit.dart';
 
 import 'package:intl/intl.dart';
 
-class NovElement extends StatefulWidget {
+class NovIspit extends StatefulWidget {
   final Function addItem;
 
-  NovElement(this.addItem);
+  NovIspit(this.addItem);
 
   @override
-  State<StatefulWidget> createState() => _NovElementState();
+  State<StatefulWidget> createState() => _NovIspitState();
 }
 
-class _NovElementState extends State<NovElement> {
+class _NovIspitState extends State<NovIspit> {
   final _predmetController = TextEditingController();
   final _vremeController = TextEditingController();
 
@@ -36,7 +36,7 @@ class _NovElementState extends State<NovElement> {
       return;
     }
 
-    final newItem = ListItem(
+    final newItem = Ispit(
       id: nanoid(5),
       predmet: vnesenPredmet,
       datumVreme: vnesenoVreme,
@@ -60,7 +60,31 @@ class _NovElementState extends State<NovElement> {
             controller: _vremeController,
             decoration: InputDecoration(labelText: "Датум и време"),
             keyboardType: TextInputType.datetime,
-            onSubmitted: (_) => _submitData(),
+            onTap: () async {
+              final DateTime? picked = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2022),
+                lastDate: DateTime(2025),
+              );
+              if (picked != null) {
+                final TimeOfDay? pickedTime = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                );
+                if (pickedTime != null) {
+                  final pickedDateTime = DateTime(
+                    picked.year,
+                    picked.month,
+                    picked.day,
+                    pickedTime.hour,
+                    pickedTime.minute,
+                  );
+                  _vremeController.text =
+                      DateFormat('yyyy-MM-dd HH:mm').format(pickedDateTime);
+                }
+              }
+            },
           ),
           ElevatedButton(
             onPressed: _submitData,
